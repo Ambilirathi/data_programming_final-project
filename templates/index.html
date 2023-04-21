@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    .title-one, .title-five {
+      color:#24a48a;
+    }
+    .title-two {
+      color: #d34f4f;
+    }
+    .title-three {
+      color: #435baf;
+    }
+    .title-four {
+      color: #ffa07a;
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: sans-serif;
+    }
+
+    section {
+      height: 100vh;
+      display: flex;
+      color: #ffffff;
+      scroll-snap-align: start;
+    }
+
+    .container {
+      scroll-snap-type: y mandatory;
+      overflow-y: scroll;
+      height: 100vh;
+    }
+
+    .one {
+      background: #24a48a;
+    }
+    .two {
+      background: #d34f4f;
+    }
+    .three {
+      background: #435baf;
+    }
+    .four {
+      background: #ffa07a;
+    }
+    .five {
+      background: #24a48a;
+    }
+
+    .two, .four {
+      flex-direction: row-reverse;
+    }
+    .left {
+      background-color: white;
+      height: 100vh;
+      width: 30%;
+    }
+    .left, .right {
+      padding: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    h1{
+      height: 100%;
+      width: 100%;
+    }
+    .title {
+        color: black;
+    }
+    /* side menu */
+    .side-menu{
+      margin: 20px;
+    }
+    .sidenav {
+      height: 100%;
+      width: 0;
+      position: fixed;
+      z-index: 1;
+      top: 0;
+      left: 0;
+      background-color: #111;
+      overflow-x: hidden;
+      transition: 0.5s;
+      padding-top: 60px;
+      color: #d34f4f;
+    }
+
+    .sidenav a {
+      padding: 8px 8px 8px 32px;
+      text-decoration: none;
+      font-size: 25px;
+      color: #818181;
+      display: block;
+      transition: 0.3s;
+    }
+
+    .sidenav a:hover {
+      color: #f1f1f1;
+    }
+
+    .sidenav .closebtn {
+      position: absolute;
+      top: 0;
+      right: 25px;
+      font-size: 36px;
+      margin-left: 50px;
+    }
+    @media screen and (max-height: 450px) {
+      .sidenav {
+        padding-top: 15px;
+      }
+      .sidenav a {
+        font-size: 18px;
+      }
+     }
+    .menu-container {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      width: 40px;
+      height: 40px;
+      background-color: white;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: .5;
+    }
+    .menu-container:hover {
+      opacity: 1;
+    }
+
+    /* tabale */
+    .search-container {
+      width: 100%;
+      height: 60px;
+      display: flex;
+    }
+    .search-container > div {
+      width: 50%;
+      height: 48px;
+      display: flex;
+    }
+    #myInput {
+      background-image: url("/css/searchicon.png"); /* Add a search icon to input */
+      background-position: 10px 12px; /* Position the search icon */
+      background-repeat: no-repeat; /* Do not repeat the icon image */
+      width: 100%; /* Full-width */
+      font-size: 16px; /* Increase font-size */
+      padding: 12px 20px 12px 40px; /* Add some padding */
+      border: 1px solid #ddd; /* Add a grey border */
+      margin-bottom: 12px; /* Add some space below the input */
+    }
+
+    .myTable {
+      border-collapse: collapse; /* Collapse borders */
+      width: 100%; /* Full-width */
+      border: 1px solid #ddd; /* Add a grey border */
+      font-size: 18px; /* Increase font-size */
+    }
+
+    .myTable th,
+    .myTable td {
+      text-align: left; /* Left-align text */
+      padding: 12px; /* Add padding */
+    }
+
+    .myTable tr {
+      /* Add a bottom border to all table rows */
+      border-bottom: 1px solid #ddd;
+    }
+
+    .myTable tr.header,
+    .myTable tr:hover {
+      /* Add a grey background color to the table header and on hover */
+      background-color: #f1f1f1;
+    }
+
+  </style>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script type="text/javascript">
+    google.charts.load('current', {'packages':['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+    function drawChart() {
+      fetch('/api/chart')
+        .then(response => response.json())
+        .then(data => {
+          const chartData = google.visualization.arrayToDataTable(data);
+          const options = {
+            title: 'Max Prices by Brand',
+            legend: { position: 'none' },
+            vAxis: { title: 'Brand' },
+            hAxis: { title: 'Max Price' },
+            bars: 'horizontal'
+          };
+          const chart = new google.visualization.BarChart(document.getElementById('barpricechart'));
+          chart.draw(chartData, options);
+        });
+    }
+  </script>
+  <script type="text/javascript">
+    google.charts.load('current', {'packages':['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+      fetch('/api/chart')
+        .then(response => response.json())
+        .then(data => {
+          const chartData = google.visualization.arrayToDataTable(data);
+          const options = {
+            title: 'Max Prices by Brand',
+            pieSliceText: 'label',
+            pieHole: 0.4,
+            slices: {
+              0: { color: '#3366CC' },
+              1: { color: '#DC3912' },
+              2: { color: '#FF9900' },
+              3: { color: '#109618' },
+              4: { color: '#990099' }
+            }
+          };
+          const chart = new google.visualization.PieChart(document.getElementById('chart'));
+          chart.draw(chartData, options);
+        });
+    }
+  </script>
+
+  <script>
+
+      google.charts.load('current', {'packages':['scatter']});
+      google.charts.setOnLoadCallback(drawChart);
+
+function drawChart () {
+          fetch('/api/data')
+        .then(response => response.json())
+        .then(datas => {
+
+
+     const data = new google.visualization.DataTable();
+        data.addColumn('number', 'Price');
+        data.addColumn('number', 'Year');
+
+        data.addRows(datas);
+
+        var options = {
+          width: 800,
+          height: 500,
+          chart: {
+            title: 'Price vs Year',
+            subtitle: 'Based on price per Year'
+          },
+          axes: {
+            x: {
+              0: {side: 'top'}
+            }
+          }
+        };
+
+        var chart = new google.charts.Scatter(document.getElementById('scatter_top_x'));
+
+        chart.draw(data, google.charts.Scatter.convertOptions(options));
+      });
+}
+  </script>
+
+  <script type="text/javascript">
+    google.charts.load('current', {'packages':['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+      fetch('/api/economy')
+        .then(response => response.json())
+        .then(data => {
+          const chartData = google.visualization.arrayToDataTable(data);
+          const options = {
+            title: 'Fuel Efficient vehicle by Brand',
+            legend: { position: 'none' },
+            vAxis: { title: 'Mileage' },
+            hAxis: { title: 'Brand' },
+            bars: 'vertical'
+          };
+          const chart = new google.visualization.Histogram(document.getElementById('bareconomy'));
+          chart.draw(chartData, options);
+        });
+    }
+  </script>
+
+  <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+      fetch('/api/price')
+        .then(response => response.json())
+        .then(data => {
+        console.log(data);
+        var data = google.visualization.arrayToDataTable(data);
+
+        var options = {
+          title: 'Company Performance',
+          curveType: 'function',
+          legend: { position: 'bottom' }
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+
+        chart.draw(data, options);
+      });
+      }
+    </script>
+    <script>
+      function openNav() {
+        document.getElementById("mySidenav").style.width = "100vw";
+        this.callAll();
+      }
+
+      function closeNav() {
+        document.getElementById("mySidenav").style.width = "0";
+      }
+      function callAll() {
+        fetch('/api/alldata')
+        .then(response => response.json())
+        .then(data => {
+          this.renderTable(data, "all-data", "searchId", "searchRange");
+        });
+
+      }
+      function searchById() {
+        let value = document.getElementById("search-id").value;
+        let url = `/api/searchbyid?param=${value}`;
+          fetch(url)
+          .then(response => response.json())
+          .then(data => {
+            this.renderTable(data, "searchId", "all-data", "searchRange");
+          });
+
+      }
+      function searchByRange() {
+        let value = document.getElementById("search-range").value;
+        let url = `/api/alldatabyrange?param=${value}`;
+          fetch(url)
+          .then(response => response.json())
+          .then(data => {
+            this.renderTable(data, "searchRange", "all-data", "searchId");
+          });
+
+      }
+      function renderTable(data, id1, id2, id3) {
+        var tbl = document.getElementById(id2);
+        if(tbl) tbl.style.display="none";
+        var tbl1 = document.getElementById(id3);
+        if(tbl1) tbl1.style.display="none";
+        var tbl3 = document.getElementById(id1);
+        if(tbl3) tbl3.style.display="block";
+
+
+        data.shift();
+
+        var tableData = data.map(x => ({
+          Id: x[0],
+          Brand: x[1],
+          Price: x[2],
+          Body: x[3],
+          Mileage: x[4],
+          EngineV: x[5],
+          Engine_Type: x[6],
+          Year: x[7],
+          Model: x[8]
+        }));
+        let table = document.getElementById(id1);
+
+        for (let val of tableData) {
+            let tr = document.createElement('tr');
+
+            let td1 = document.createElement('td');
+            td1.textContent = val.Id;
+            tr.appendChild(td1);
+
+            let td2 = document.createElement('td');
+            td2.textContent = val.Brand;
+            tr.appendChild(td2);
+
+            let td3 = document.createElement('td');
+            td3.textContent = val.Price;
+            tr.appendChild(td3);
+
+            let td4 = document.createElement('td');
+            td4.textContent = val.Body;
+            tr.appendChild(td4);
+
+            let td5 = document.createElement('td');
+            td5.textContent = val.Mileage;
+            tr.appendChild(td5);
+
+            let td6 = document.createElement('td');
+            td6.textContent = val.EngineV;
+            tr.appendChild(td6);
+
+            let td7 = document.createElement('td');
+            td7.textContent = val.Engine_Type;
+            tr.appendChild(td7);
+
+            let td8 = document.createElement('td');
+            td8.textContent = val.Year;
+            tr.appendChild(td8);
+
+            let td9 = document.createElement('td');
+            td9.textContent = val.Model;
+            tr.appendChild(td9);
+
+            table.appendChild(tr);
+        }
+      }
+
+    </script>
+
+
+</head>
+<body>
+    <div id="mySidenav" class="sidenav">
+      <a href="javascript:void(0)" class="closebtn" onclick="closeNav()"
+        >&times;</a
+      >
+      <div class="side-menu">
+        <div class="search-container">
+            <div>
+              <input type="text" id="search-id" placeholder="Search for id.."><button onclick="searchById()" style="width:120px">Search by ID</button>
+            </div>
+                <div>
+                  <input type="text" id="search-range" placeholder="Enter a range.."><button  onclick="searchByRange()" style="width:120px">Search by Range</button>
+            </div>
+        </div>
+        <table class="myTable" id="all-data">
+              <tr class="header">
+                <th>Id</th>
+                <th>Brand</th>
+                <th>Price</th>
+                <th>Body</th>
+                <th>Mileage</th>
+                <th>EngineV</th>
+                <th>Engine_Type</th>
+                <th>Year</th>
+                <th>Model</th>
+              </tr>
+            </table>
+
+            <table class="myTable" id="searchId">
+              <tr class="header">
+                <th style="width:4%;">Id</th>
+                <th style="width:22%;">Brand</th>
+                <th style="width:8%;">Price</th>
+                <th style="width:10%;">Body</th>
+                <th style="width:12%;">Mileage</th>
+                <th style="width:10%;">EngineV</th>
+                <th style="width:10%;">Engine_Type</th>
+                <th style="width:8%;">Year</th>
+                <th style="width:12%;">Model</th>
+              </tr>
+            </table>
+            <table class="myTable" id="searchRange">
+              <tr class="header">
+                <th style="width:4%;">Id</th>
+                <th style="width:22%;">Brand</th>
+                <th style="width:8%;">Price</th>
+                <th style="width:10%;">Body</th>
+                <th style="width:12%;">Mileage</th>
+                <th style="width:10%;">EngineV</th>
+                <th style="width:10%;">Engine_Type</th>
+                <th style="width:8%;">Year</th>
+                <th style="width:12%;">Model</th>
+              </tr>
+            </table>
+          </div>
+        </div>
+    <div class="menu-container">
+      <span
+        class="menu"
+        style="font-size: 30px; cursor: pointer;"
+        onclick="openNav()"
+        >&#9776;</span
+      >
+    </div>
+    <div class="container">
+      <section class="one">
+        <div class="left">
+          <h3 class="title" style="color:black">Max Prices by Brand</h3>
+        </div>
+        <div class="right">
+          <div id="barpricechart" style="width: 900px; height: 500px;"></div>
+        </div>
+      </section>
+      <section class="two">
+        <div class="left">
+          <h3 class="title">Max Prices by Brand</h3>
+        </div>
+        <div class="right">
+          <div id="chart" style="width: 900px; height: 500px;"></div>
+        </div>
+      </section>
+      <section class="three">
+        <div class="left">
+          <h3 class="title">Price vs Year</h3>
+        </div>
+        <div class="right">
+          <div id="scatter_top_x" style="width: 900px; height: 500px;"></div>
+        </div>
+      </section>
+      <section class="four">
+        <div class="left">
+          <h3 class="title">Fuel Efficient vehicle by Brand</h3>
+        </div>
+        <div class="right">
+          <div id="bareconomy" style="width: 900px; height: 500px;"></div>
+        </div>
+      </section>
+      <section class="five">
+        <div class="left">
+          <h3 class="title">Company Performance</h3>
+        </div>
+        <div class="right">
+          <div id="curve_chart" style="width: 900px; height: 500px;"></div>
+        </div>
+      </section>
+    </div>
+</body>
+</html>
