@@ -79,6 +79,59 @@ def chart_year_price():
 
     return jsonify(data)
 
+@app.route('/api/alldata')
+def get_data():
+    df.dropna(inplace=True)
+    data = [['id','Brand','Price', 'Body', "Mileage",'EngineV','Engine_Type', 'Year' ,'Model' ,'Registration']]
+    id=0
+    for brand,price, body, mileage,engineV,engine_Type, year ,model ,registration in zip(df['Brand'],df['Price'],df['Body'],df['Mileage'],df['EngineV'],df['Engine_Type'],df['Year'],df['Model'], df['Registration']):
+        if not math.isnan(price):
+            id=id+1
+            data.append([id,brand,price, body, mileage,engineV,engine_Type, year ,model])
+
+    return jsonify(data)
+
+
+@app.route('/api/searchbyid')
+def data_by_id():
+    param = request.args.get('param')
+
+
+    df.dropna(inplace=True)
+    data = [['id', 'Brand', 'Price', 'Body', "Mileage", 'EngineV', 'Engine_Type', 'Year', 'Model', 'Registration']]
+    newdata = [[ 'Brand', 'Price', 'Body', "Mileage", 'EngineV', 'Engine_Type', 'Year', 'Model', 'Registration']]
+    id = 0
+    for brand, price, body, mileage, engineV, engine_Type, year, model, registration in zip(df['Brand'], df['Price'],
+                                                                                            df['Body'], df['Mileage'],
+                                                                                            df['EngineV'],
+                                                                                            df['Engine_Type'],
+                                                                                            df['Year'], df['Model'],
+                                                                                            df['Registration']):
+        if not math.isnan(price):
+            id = id + 1
+            data.append([id, brand, price, body, mileage, engineV, engine_Type, year, model])
+
+    for row in data:
+        if row[0] == int(param):
+            newdata.append(row)
+            return jsonify(newdata)
+    return jsonify({'error': 'Data not found'})
+
+
+@app.route('/api/alldatabyrange')
+def get_data_range():
+    param = request.args.get('param')
+    df.dropna(inplace=True)
+    df_top10 = df.head(int(param))
+    data = [['id','Brand','Price', 'Body', "Mileage",'EngineV','Engine_Type', 'Year' ,'Model' ,'Registration']]
+    id=0
+    for brand,price, body, mileage,engineV,engine_Type, year ,model ,registration in zip(df_top10['Brand'],df_top10['Price'],df_top10['Body'],df_top10['Mileage'],df_top10['EngineV'],df_top10['Engine_Type'],df_top10['Year'],df_top10['Model'], df_top10['Registration']):
+        if not math.isnan(price):
+            id=id+1
+            data.append([id,brand,price, body, mileage,engineV,engine_Type, year ,model])
+
+    return jsonify(data)
+
 @app.route('/')
 def index():
     return render_template('index.html')
